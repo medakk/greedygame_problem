@@ -25,13 +25,20 @@ def resize(img, new_size):
               the new image, and w is the width of the new image
     """
     # Width, height, channels
-    h, w, c = img.shape
+    h, w = img.shape[0], img.shape[1]
     new_h, new_w = new_size
+
+    if len(img.shape) == 3:
+        # Color image
+        c = img.shape[2]
+        new_img = np.zeros((new_h, new_w, c), dtype='uint8')
+    else:
+        # Grayscale image
+        new_img = np.zeros((new_h, new_w), dtype='uint8')
 
     scale_w = new_w / w
     scale_h = new_h / h
 
-    new_img = np.zeros((new_h, new_w, c), dtype='uint8')
     for i in range(new_w):
         for j in range(new_h):
             # Nearest neighbour interpolation
@@ -49,12 +56,8 @@ def zoom(img, px, py, scale):
     py: y coordinate of the pivot (topleft corner is 0,0)
     scale: factor by which to scale image
     """
-    # If the original image is grayscale, reshape it
-    if len(img.shape) == 2:
-        img = img.reshape(*img.shape, 1)
-
-    # height, width, channels
-    h, w, c = img.shape
+    # height, width
+    h, w = img.shape[0], img.shape[1]
 
     # Bounding box width and height
     bb_w = ceil(w / scale)
@@ -70,10 +73,6 @@ def zoom(img, px, py, scale):
     new_img = img[py - bb_h // 2: py + bb_h // 2, px - bb_w // 2:px + bb_w //2]
 
     new_img = resize(new_img, (h, w))
-
-    # If the input image was grayscale, convert it back to two-dimensions
-    if c == 1:
-        new_img = new_img.reshape((h, w))
 
     return new_img
 

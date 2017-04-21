@@ -26,11 +26,12 @@ for i in range(file_count):
     plt.imshow(img)
     plt.plot([pivot[0]], [pivot[1]], 'o', c='r')
     plt.axis('off')
+    plt.title('{}x{}'.format(img.shape[1], img.shape[0]))
 
     plt.subplot(2, file_count, i + 1 + file_count)
     plt.imshow(zoomed_img)
     plt.axis('off')
-
     plt.title('Scale: {}'.format(scale))
+
 plt.tight_layout()
 plt.show()
